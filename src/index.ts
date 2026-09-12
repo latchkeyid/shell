@@ -129,6 +129,7 @@ export { ConfirmDialog, type ConfirmDialogProps } from "@/actions/confirm-dialog
 export { useOptimisticAction, type OptimisticAction, type OptimisticActionOptions } from "@/actions/use-optimistic-action"
 export { toast, toastSaved, toastUndo, UNDO_TOAST_MS, type UndoToastOptions } from "@/actions/toast"
 export { InlineMessage, type InlineMessageProps, type InlineMessageTone } from "@/actions/inline-message"
+export { SaveIndicator, useSaveState, type SaveIndicatorProps, type SaveState } from "@/actions/save-indicator"
 
 // Utilities
 export { cn } from "@/lib/utils"

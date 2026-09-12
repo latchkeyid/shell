@@ -28,7 +28,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "screenshots": "playwright test --grep @screenshots"
+    "screenshots": "playwright test --grep @screenshots",
+    "fonts": "node scripts/sync-fonts.mjs",
+    "playground:build": "vite build --config playground/vite.config.ts"
   },
   "peerDependencies": {
     "react": "^19.0.0",

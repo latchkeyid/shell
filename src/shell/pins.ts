@@ -15,13 +15,13 @@ export function recentNavKey(appId: string, userId: string) {
 /** Per-user pinned nav item ids, seeded by the app on first use. */
 export function usePins(appId: string, userId: string, seed: string[] = []) {
   const key = pinsKey(appId, userId)
+  // Compared by content so a new array literal on each render does not reset pins.
+  const seedKey = seed.join("|")
   const [pinned, setPinned] = React.useState<string[]>(() => readJson<string[] | null>(key, null) ?? seed)
 
   React.useEffect(() => {
-    setPinned(readJson<string[] | null>(key, null) ?? seed)
-    // Seed is compared by content so a new array literal does not reset pins.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key, seed.join("|")])
+    setPinned(readJson<string[] | null>(key, null) ?? (seedKey ? seedKey.split("|") : []))
+  }, [key, seedKey])
 
   const toggle = React.useCallback(
     (id: string) => {

@@ -95,12 +95,14 @@ export function DetailSheet({
   }
 
   return (
-    <Sheet open={open} onOpenChange={(next) => !next && onPanelChange(null)}>
+    // Non-modal: the list stays visible and clickable while browsing rows.
+    <Sheet open={open} modal={false} onOpenChange={(next) => !next && onPanelChange(null)}>
       <SheetContent
         side="right"
         data-slot="detail-sheet"
         style={{ width, maxWidth: "100vw" }}
-        className={cn("gap-0 sm:max-w-none", className)}
+        className={cn("gap-0 border-l shadow-lift sm:max-w-none", className)}
+        onInteractOutside={(event) => event.preventDefault()}
         onKeyDown={(event) => {
           if (event.target !== event.currentTarget && (event.target as HTMLElement).closest("input, textarea, [contenteditable]")) return
           if ((event.key === "ArrowUp" || event.key === "k") && onPrevious) {

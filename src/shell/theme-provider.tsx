@@ -25,6 +25,15 @@ function applyTheme(resolved: ResolvedTheme) {
   root.classList.toggle("dark", resolved === "dark")
   root.style.colorScheme = resolved
   root.dataset.theme = resolved
+  // Keep the browser chrome in step with --background.
+  let meta = document.querySelector<HTMLMetaElement>("meta[name='theme-color']")
+  if (!meta) {
+    meta = document.createElement("meta")
+    meta.name = "theme-color"
+    document.head.append(meta)
+  }
+  const background = getComputedStyle(root).getPropertyValue("--background").trim()
+  if (background) meta.content = background
 }
 
 export interface ThemeProviderProps {
