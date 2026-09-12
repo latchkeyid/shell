@@ -1,0 +1,3 @@
+@import "../src/theme/base.css";
+/* The per-app accent file is swapped at runtime via <link id="accent-css">. */
+@source "../src";

@@ -5,6 +5,7 @@ import {
   createColumnHelper,
   createSortedRowModel,
   FlexRender,
+  flexRender,
   rowSelectionFeature,
   rowSortingFeature,
   sortFn_alphanumeric,
@@ -41,7 +42,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { cn } from "@/lib/utils"
 import { densities, densityLabels, useDensity, type Density } from "@/data/density"
 import { EmptyState } from "@/data/empty-state"
-import { formatEmpty, formatRange } from "@/data/formatters"
+import { EMPTY, formatEmpty, formatRange } from "@/data/formatters"
 
 /** Per-column presentation hints, declared via `meta` on a column def. */
 export interface DataTableColumnMeta {
@@ -360,7 +361,7 @@ function HeaderCell<TData extends RowData>({ header, pinned }: { header: Header<
       aria-sort={sorted === "asc" ? "ascending" : sorted === "desc" ? "descending" : canSort ? "none" : undefined}
       style={pinStyle(column, pinned)}
       className={cn(
-        "h-8 border-b bg-card px-(--cell-px) text-2xs font-medium tracking-wide whitespace-nowrap text-muted-foreground uppercase",
+        "group/head h-8 border-b bg-card px-(--cell-px) text-2xs font-medium tracking-wide whitespace-nowrap text-muted-foreground uppercase",
         meta?.numeric && "text-right tabular-nums",
         isPinned === "start" && "border-r border-r-border-soft",
         isPinned === "end" && "border-l border-l-border-soft",
@@ -382,7 +383,7 @@ function HeaderCell<TData extends RowData>({ header, pinned }: { header: Header<
           ) : sorted === "desc" ? (
             <ArrowDownIcon className="size-3" aria-hidden="true" />
           ) : (
-            <ChevronsUpDownIcon className="size-3 opacity-40" aria-hidden="true" />
+            <ChevronsUpDownIcon className="size-3 opacity-0 transition-opacity group-hover/head:opacity-40" aria-hidden="true" />
           )}
         </button>
       ) : (
@@ -390,6 +391,12 @@ function HeaderCell<TData extends RowData>({ header, pinned }: { header: Header<
       )}
     </TableHead>
   )
+}
+
+/** Custom cells that return null or "" still render the em dash. */
+function renderCell<TData extends RowData>(cell: Cell<DataTableFeatures, TData, unknown>): React.ReactNode {
+  const content = flexRender(cell.column.columnDef.cell, cell.getContext())
+  return content == null || content === "" ? EMPTY : content
 }
 
 function BodyCell<TData extends RowData>({ cell, pinned }: { cell: Cell<DataTableFeatures, TData, unknown>; pinned: boolean }) {
@@ -410,7 +417,7 @@ function BodyCell<TData extends RowData>({ cell, pinned }: { cell: Cell<DataTabl
         meta?.cellClassName,
       )}
     >
-      <FlexRender cell={cell} />
+      {renderCell(cell)}
     </TableCell>
   )
 }
