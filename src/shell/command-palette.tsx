@@ -10,11 +10,11 @@ import {
   CommandItem as CommandRow,
   CommandList,
   CommandShortcut,
-} from "@/components/ui/command"
-import { Kbd } from "@/components/ui/kbd"
-import { useHotkey } from "@/shell/hotkeys"
-import { useShell } from "@/shell/shell-context"
-import type { CommandItem } from "@/shell/types"
+} from "../components/ui/command"
+import { Kbd } from "../components/ui/kbd"
+import { useHotkey } from "./hotkeys"
+import { useShell } from "./shell-context"
+import type { CommandItem } from "./types"
 
 const SEARCH_DEBOUNCE_MS = 250
 /** Past this many entries the list is grouped by `group`. */

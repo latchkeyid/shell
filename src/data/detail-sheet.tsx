@@ -1,13 +1,13 @@
 import * as React from "react"
 import { ArrowUpRightIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { Kbd } from "@/components/ui/kbd"
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { readJson, writeJson } from "@/lib/storage"
-import { cn } from "@/lib/utils"
-import { ShellLink } from "@/shell/link"
-import { useShellOptional } from "@/shell/shell-context"
+import { Button } from "../components/ui/button"
+import { Kbd } from "../components/ui/kbd"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "../components/ui/sheet"
+import { readJson, writeJson } from "../lib/storage"
+import { cn } from "../lib/utils"
+import { ShellLink } from "../shell/link"
+import { useShellOptional } from "../shell/shell-context"
 
 export const DETAIL_SHEET_MIN = 400
 export const DETAIL_SHEET_MAX = 720

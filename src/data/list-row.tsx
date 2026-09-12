@@ -1,7 +1,7 @@
 import * as React from "react"
 
-import { cn } from "@/lib/utils"
-import { ShellLink } from "@/shell/link"
+import { cn } from "../lib/utils"
+import { ShellLink } from "../shell/link"
 
 export interface ListRowProps extends Omit<React.ComponentProps<"div">, "title"> {
   /** Navigates when set; otherwise onClick makes the row a button. */

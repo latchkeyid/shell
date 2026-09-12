@@ -1,7 +1,7 @@
 import * as React from "react"
 
-import { cn } from "@/lib/utils"
-import { initials } from "@/lib/text"
+import { cn } from "../lib/utils"
+import { initials } from "../lib/text"
 
 const sizes = {
   16: "size-4 rounded-[4px] text-[9px]",

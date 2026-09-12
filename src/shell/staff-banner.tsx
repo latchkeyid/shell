@@ -1,9 +1,9 @@
 import * as React from "react"
 import { EyeIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { minutesLeft } from "@/shell/org-switcher"
-import { useShell } from "@/shell/shell-context"
+import { Button } from "../components/ui/button"
+import { minutesLeft } from "./org-switcher"
+import { useShell } from "./shell-context"
 
 const TITLE_PREFIX = "[Staff] "
 

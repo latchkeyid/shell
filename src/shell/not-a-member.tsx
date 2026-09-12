@@ -1,7 +1,7 @@
 import { LockIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { EmptyState } from "@/data/empty-state"
+import { Button } from "../components/ui/button"
+import { EmptyState } from "../data/empty-state"
 
 export interface NotAMemberPageProps {
   orgName: string

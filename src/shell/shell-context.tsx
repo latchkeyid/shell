@@ -11,7 +11,7 @@ import type {
   ShellCallbacks,
   ShellPaths,
   ShellSession,
-} from "@/shell/types"
+} from "./types"
 
 export interface PickerRequest {
   open: boolean

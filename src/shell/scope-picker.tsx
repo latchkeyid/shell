@@ -9,11 +9,11 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "@/components/ui/command"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
-import type { ScopeItem } from "@/shell/types"
+} from "../components/ui/command"
+import { Popover, PopoverContent, PopoverTrigger } from "../components/ui/popover"
+import { Badge } from "../components/ui/badge"
+import { cn } from "../lib/utils"
+import type { ScopeItem } from "./types"
 
 export interface ScopePickerProps {
   /** Noun used in copy: "project", "team", "tenant", "environment". */

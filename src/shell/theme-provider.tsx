@@ -1,7 +1,7 @@
 import * as React from "react"
 
-import { readJson, writeJson } from "@/lib/storage"
-import type { ThemeMode } from "@/shell/types"
+import { readJson, writeJson } from "../lib/storage"
+import type { ThemeMode } from "./types"
 
 export type ResolvedTheme = "light" | "dark"
 

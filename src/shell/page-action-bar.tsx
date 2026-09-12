@@ -8,17 +8,17 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Button } from "@/components/ui/button"
-import { Kbd } from "@/components/ui/kbd"
-import { Separator } from "@/components/ui/separator"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { modKeyLabel } from "@/lib/text"
-import { cn } from "@/lib/utils"
-import { AccountMenu } from "@/shell/account-menu"
-import { ShellLink } from "@/shell/link"
-import { ScopeChain } from "@/shell/scope-chain"
-import { useShell } from "@/shell/shell-context"
+} from "../components/ui/breadcrumb"
+import { Button } from "../components/ui/button"
+import { Kbd } from "../components/ui/kbd"
+import { Separator } from "../components/ui/separator"
+import { SidebarTrigger } from "../components/ui/sidebar"
+import { modKeyLabel } from "../lib/text"
+import { cn } from "../lib/utils"
+import { AccountMenu } from "./account-menu"
+import { ShellLink } from "./link"
+import { ScopeChain } from "./scope-chain"
+import { useShell } from "./shell-context"
 
 export interface Crumb {
   label: string

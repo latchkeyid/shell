@@ -1,7 +1,7 @@
 import * as React from "react"
 import { AlertCircleIcon, CheckIcon, Loader2Icon } from "lucide-react"
 
-import { cn } from "@/lib/utils"
+import { cn } from "../lib/utils"
 
 export type SaveState = "idle" | "saving" | "saved" | "error"
 

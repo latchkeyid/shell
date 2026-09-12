@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { readJson, writeJson } from "@/lib/storage"
+import { readJson, writeJson } from "../lib/storage"
 
 export type Density = "compact" | "normal" | "spacious"
 

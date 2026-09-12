@@ -1,7 +1,7 @@
 import * as React from "react"
 
-import { useShellOptional } from "@/shell/shell-context"
-import type { LinkProps } from "@/shell/types"
+import { useShellOptional } from "./shell-context"
+import type { LinkProps } from "./types"
 
 /** Plain anchor used when no LinkComponent is supplied. */
 export const AnchorLink = React.forwardRef<HTMLAnchorElement, LinkProps>(

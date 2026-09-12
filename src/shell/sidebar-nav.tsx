@@ -1,7 +1,7 @@
 import * as React from "react"
 import { StarIcon } from "lucide-react"
 
-import { Kbd } from "@/components/ui/kbd"
+import { Kbd } from "../components/ui/kbd"
 import {
   Sidebar,
   SidebarContent,
@@ -16,14 +16,14 @@ import {
   SidebarMenuItem,
   SidebarMenuSkeleton,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import { modKeyLabel } from "@/lib/text"
-import { cn } from "@/lib/utils"
-import { ShellLink } from "@/shell/link"
-import { OrgSwitcher } from "@/shell/org-switcher"
-import { usePins, useRecentNav } from "@/shell/pins"
-import { useShell } from "@/shell/shell-context"
-import type { NavGroup, NavItem } from "@/shell/types"
+} from "../components/ui/sidebar"
+import { modKeyLabel } from "../lib/text"
+import { cn } from "../lib/utils"
+import { ShellLink } from "./link"
+import { OrgSwitcher } from "./org-switcher"
+import { usePins, useRecentNav } from "./pins"
+import { useShell } from "./shell-context"
+import type { NavGroup, NavItem } from "./types"
 
 /** The nav item whose href best matches the current path. */
 export function findActiveItem(groups: NavGroup[], path: string): NavItem | undefined {

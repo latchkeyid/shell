@@ -1,6 +1,6 @@
 import { CheckIcon, LogOutIcon, MailIcon, MonitorIcon, MoonIcon, SunIcon } from "lucide-react"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,11 +11,11 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { initials } from "@/lib/text"
-import { useShell } from "@/shell/shell-context"
-import { useTheme } from "@/shell/theme-provider"
-import type { ThemeMode } from "@/shell/types"
+} from "../components/ui/dropdown-menu"
+import { initials } from "../lib/text"
+import { useShell } from "./shell-context"
+import { useTheme } from "./theme-provider"
+import type { ThemeMode } from "./types"
 
 const themeOptions: Array<{ value: ThemeMode; label: string; icon: typeof SunIcon }> = [
   { value: "system", label: "System", icon: MonitorIcon },

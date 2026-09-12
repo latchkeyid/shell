@@ -1,17 +1,17 @@
 import * as React from "react"
 
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
-import { Toaster } from "@/components/ui/sonner"
-import { TooltipProvider } from "@/components/ui/tooltip"
-import { readCookie } from "@/lib/storage"
-import { cn } from "@/lib/utils"
-import { CommandPalette } from "@/shell/command-palette"
-import { LiveRegionProvider } from "@/shell/live-region"
-import { AnchorLink } from "@/shell/link"
-import { AppSidebar } from "@/shell/sidebar-nav"
-import { ShellContextProvider, type PickerRequest, type ShellContextValue } from "@/shell/shell-context"
-import { StaffBanner } from "@/shell/staff-banner"
-import { ThemeProvider, useResolvedTheme } from "@/shell/theme-provider"
+import { SidebarInset, SidebarProvider } from "../components/ui/sidebar"
+import { Toaster } from "../components/ui/sonner"
+import { TooltipProvider } from "../components/ui/tooltip"
+import { readCookie } from "../lib/storage"
+import { cn } from "../lib/utils"
+import { CommandPalette } from "./command-palette"
+import { LiveRegionProvider } from "./live-region"
+import { AnchorLink } from "./link"
+import { AppSidebar } from "./sidebar-nav"
+import { ShellContextProvider, type PickerRequest, type ShellContextValue } from "./shell-context"
+import { StaffBanner } from "./staff-banner"
+import { ThemeProvider, useResolvedTheme } from "./theme-provider"
 import {
   defaultPaths,
   type CommandItem,
@@ -25,7 +25,7 @@ import {
   type ShellPaths,
   type ShellSession,
   type ThemeMode,
-} from "@/shell/types"
+} from "./types"
 
 export const SIDEBAR_COOKIE = "sidebar_state"
 

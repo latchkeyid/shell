@@ -1,7 +1,7 @@
 import * as React from "react"
 import { AlertCircleIcon, InboxIcon, LockIcon, SearchXIcon, SparklesIcon, type LucideIcon } from "lucide-react"
 
-import { cn } from "@/lib/utils"
+import { cn } from "../lib/utils"
 
 export type EmptyStateVariant = "no-results" | "blank-slate" | "cleared" | "permission" | "error"
 

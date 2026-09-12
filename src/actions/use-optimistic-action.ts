@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { toastUndo, UNDO_TOAST_MS } from "@/actions/toast"
+import { toastUndo, UNDO_TOAST_MS } from "./toast"
 
 export interface OptimisticActionOptions<TState, TInput> {
   /** Committed state from the app (query cache, store). */

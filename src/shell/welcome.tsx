@@ -1,11 +1,11 @@
 import * as React from "react"
 import { CheckIcon, CopyIcon, MailIcon, PlusIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { roleLabel } from "@/lib/text"
-import { OrgAvatar } from "@/shell/org-avatar"
-import type { ShellInvitation, ShellSession } from "@/shell/types"
+import { Button } from "../components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card"
+import { roleLabel } from "../lib/text"
+import { OrgAvatar } from "./org-avatar"
+import type { ShellInvitation, ShellSession } from "./types"
 
 export interface WelcomePageProps {
   session: ShellSession

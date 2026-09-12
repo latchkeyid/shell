@@ -1,9 +1,9 @@
 import * as React from "react"
 import { CheckIcon, CopyIcon } from "lucide-react"
 
-import { cn } from "@/lib/utils"
-import { truncateId } from "@/data/formatters"
-import { useAnnounce } from "@/shell/live-region"
+import { cn } from "../lib/utils"
+import { truncateId } from "./formatters"
+import { useAnnounce } from "../shell/live-region"
 
 export interface IdProps extends Omit<React.ComponentProps<"button">, "value" | "children"> {
   value: string

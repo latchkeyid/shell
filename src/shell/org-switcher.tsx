@@ -14,8 +14,8 @@ import {
   SettingsIcon,
 } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from "../components/ui/badge"
+import { Button } from "../components/ui/button"
 import {
   Command,
   CommandGroup,
@@ -23,27 +23,27 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from "@/components/ui/command"
-import { Kbd } from "@/components/ui/kbd"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+} from "../components/ui/command"
+import { Kbd } from "../components/ui/kbd"
+import { Popover, PopoverContent, PopoverTrigger } from "../components/ui/popover"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "../components/ui/sheet"
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSkeleton,
   useSidebar,
-} from "@/components/ui/sidebar"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { readJson, writeJson } from "@/lib/storage"
-import { roleLabel } from "@/lib/text"
-import { cn } from "@/lib/utils"
-import { useChord } from "@/shell/hotkeys"
-import { focusPageHeading, useAnnounce } from "@/shell/live-region"
-import { OrgAvatar } from "@/shell/org-avatar"
-import { useShell } from "@/shell/shell-context"
-import type { ShellOrg, ShellSession } from "@/shell/types"
+} from "../components/ui/sidebar"
+import { Skeleton } from "../components/ui/skeleton"
+import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip"
+import { readJson, writeJson } from "../lib/storage"
+import { roleLabel } from "../lib/text"
+import { cn } from "../lib/utils"
+import { useChord } from "./hotkeys"
+import { focusPageHeading, useAnnounce } from "./live-region"
+import { OrgAvatar } from "./org-avatar"
+import { useShell } from "./shell-context"
+import type { ShellOrg, ShellSession } from "./types"
 
 /** Above this many memberships the list asks for a query before rendering everything. */
 export const SEARCH_HINT_THRESHOLD = 50

@@ -27,8 +27,8 @@ import {
 } from "@tanstack/react-table"
 import { ArrowDownIcon, ArrowUpIcon, ChevronDownIcon, ChevronsUpDownIcon, Settings2Icon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "../components/ui/button"
+import { Checkbox } from "../components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,13 +36,13 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { cn } from "@/lib/utils"
-import { densities, densityLabels, useDensity, type Density } from "@/data/density"
-import { EmptyState } from "@/data/empty-state"
-import { EMPTY, formatEmpty, formatRange } from "@/data/formatters"
+} from "../components/ui/dropdown-menu"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table"
+import { cn } from "../lib/utils"
+import { densities, densityLabels, useDensity, type Density } from "./density"
+import { EmptyState } from "./empty-state"
+import { EMPTY, formatEmpty, formatRange } from "./formatters"
 
 /** Per-column presentation hints, declared via `meta` on a column def. */
 export interface DataTableColumnMeta {

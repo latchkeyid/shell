@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { readJson, writeJson } from "@/lib/storage"
+import { readJson, writeJson } from "../lib/storage"
 
 export const MAX_RECENT_NAV = 5
 
