@@ -66,7 +66,7 @@ export function WelcomePage({ session, appName, onAccept, onDecline, onCreateOrg
               </div>
             </div>
           </CardHeader>
-          <CardContent className="flex gap-2">
+          <CardContent className="flex-row gap-2">
             <Button size="sm" disabled={pending === invitation.id} onClick={() => act(invitation, onAccept)}>
               Accept invitation
             </Button>
@@ -99,7 +99,7 @@ export function WelcomePage({ session, appName, onAccept, onDecline, onCreateOrg
                 An organisation admin can invite this address from their members page.
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex items-center gap-2">
+            <CardContent className="flex-row items-center gap-2">
               <span className="flex h-8 items-center gap-2 rounded-md border bg-card px-2.5 font-mono text-xs">
                 <MailIcon className="size-3.5 text-muted-foreground" strokeWidth={1.5} absoluteStrokeWidth aria-hidden="true" />
                 {session.user.email}
