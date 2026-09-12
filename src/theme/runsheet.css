@@ -1,0 +1,23 @@
+/* runsheet accent: teal. Import after base.css. */
+
+:root {
+  --primary: oklch(0.649 0.114 182); /* #12A594 */
+  --primary-foreground: oklch(0.99 0.005 182);
+  --accent-2: oklch(0.68 0.154 154.3); /* #2FB36B */
+  --accent-soft: oklch(0.953 0.023 180); /* #E0F5F0 */
+  --ring: var(--primary);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent-soft);
+  --sidebar-accent-foreground: var(--primary);
+  --sidebar-ring: var(--primary);
+  --row-selected: color-mix(in oklab, var(--primary) 8%, transparent);
+}
+
+.dark {
+  --primary: oklch(0.733 0.127 169.1); /* #3FC29B */
+  --primary-foreground: oklch(0.15 0.03 170);
+  --accent-2: oklch(0.774 0.145 154); /* #5FD08A */
+  --accent-soft: oklch(0.319 0.045 174.6); /* #163A31 */
+  --row-selected: color-mix(in oklab, var(--primary) 12%, transparent);
+}

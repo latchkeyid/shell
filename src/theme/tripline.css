@@ -1,0 +1,23 @@
+/* tripline accent: indigo. Import after base.css. */
+
+:root {
+  --primary: oklch(0.54 0.184 278.3); /* #5B5BD6 */
+  --primary-foreground: oklch(0.99 0.005 278);
+  --accent-2: oklch(0.556 0.183 305.9); /* #8E4EC6 */
+  --accent-soft: oklch(0.953 0.017 286.1); /* #EEEEFB */
+  --ring: var(--primary);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent-soft);
+  --sidebar-accent-foreground: var(--primary);
+  --sidebar-ring: var(--primary);
+  --row-selected: color-mix(in oklab, var(--primary) 8%, transparent);
+}
+
+.dark {
+  --primary: oklch(0.637 0.159 280.9); /* #7C7CE8 */
+  --primary-foreground: oklch(0.15 0.03 281);
+  --accent-2: oklch(0.682 0.161 304.7); /* #B07CE8 */
+  --accent-soft: oklch(0.284 0.068 283.5); /* #26244A */
+  --row-selected: color-mix(in oklab, var(--primary) 12%, transparent);
+}
