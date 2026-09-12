@@ -32,17 +32,17 @@ Requirements on the consumer:
 - Vite with `@vitejs/plugin-react` and `@tailwindcss/vite`.
 - `tsconfig.json` with `"moduleResolution": "bundler"` and `"jsx": "react-jsx"`.
 
-Then in the app's stylesheet, import the base theme, the app's accent file,
-and tell Tailwind to scan the shell's source for classes:
+Then in the app's stylesheet, import Tailwind, the base theme, the app's
+accent file, and tell Tailwind to scan the shell's source for classes:
 
 ```css
+@import "tailwindcss";
 @import "@latchkey/shell/theme/base.css";
 @import "@latchkey/shell/theme/tripline.css"; /* or runsheet.css / latchkey.css */
 @source "../node_modules/@latchkey/shell/src";
 ```
 
-`base.css` already imports Tailwind (`@import "tailwindcss"`), `tw-animate-css`
-and the self-hosted Geist fonts, so the app does not import Tailwind again.
+`base.css` brings `tw-animate-css` and the self-hosted Geist fonts with it.
 The accent file only sets `--primary`, `--accent-2`, `--accent-soft` and the
 sidebar mappings; the accent defaults in `base.css` live in a cascade layer,
 so the accent file wins whatever the import order.

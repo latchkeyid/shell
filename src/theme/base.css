@@ -10,9 +10,14 @@
  *
  * Theme states: bare :root is light, .dark on <html> is dark. ThemeProvider
  * toggles the class and color-scheme.
+ *
+ * Import order in the app's stylesheet:
+ *   @import "tailwindcss";
+ *   @import "@latchkey/shell/theme/base.css";
+ *   @import "@latchkey/shell/theme/<app>.css";
+ *   @source "../node_modules/@latchkey/shell/src";
  */
 
-@import "tailwindcss";
 @import "tw-animate-css";
 @import "./fonts.css";
 
