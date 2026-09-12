@@ -144,8 +144,11 @@ export function useHotkey(
           handlerRef.current(event)
           return
         }
+        // The first key of a chord is shared with every other chord that
+        // starts the same way (G O, G P, G E), each in its own listener.
+        // Cancelling the event here would make the later listeners skip it
+        // and never arm, so only the completing key prevents default.
         pending = { index: 1, seq, at: now }
-        if (preventDefault) event.preventDefault()
         return
       }
     }

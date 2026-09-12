@@ -55,6 +55,28 @@ describe("useHotkey chords", () => {
     expect(onFire).not.toHaveBeenCalled()
   })
 
+  it("arms every chord that shares a first key, in separate listeners", () => {
+    const onOrg = vi.fn()
+    const onProject = vi.fn()
+    const onEnv = vi.fn()
+    render(
+      <>
+        <Harness combo="g o" onFire={onOrg} />
+        <Harness combo="g p" onFire={onProject} />
+        <Harness combo="g e" onFire={onEnv} />
+      </>,
+    )
+    press("g")
+    press("e")
+    expect(onEnv).toHaveBeenCalledTimes(1)
+    expect(onOrg).not.toHaveBeenCalled()
+    expect(onProject).not.toHaveBeenCalled()
+    press("g")
+    const second = press("p")
+    expect(onProject).toHaveBeenCalledTimes(1)
+    expect(second.defaultPrevented).toBe(true)
+  })
+
   it("restarts the chord when the first key repeats", () => {
     const onFire = vi.fn()
     render(<Harness combo="g o" onFire={onFire} />)
