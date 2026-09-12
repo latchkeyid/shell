@@ -61,7 +61,7 @@ export function WelcomePage({ session, appName, onAccept, onDecline, onCreateOrg
               <div className="grid min-w-0 gap-0.5">
                 <CardTitle className="truncate">{invitation.orgName}</CardTitle>
                 <CardDescription>
-                  Invited by {invitation.invitedBy} as {roleLabel(invitation.role)}
+                  {invitation.invitedBy ? `Invited by ${invitation.invitedBy}` : "Invited"} as {roleLabel(invitation.role)}
                 </CardDescription>
               </div>
             </div>

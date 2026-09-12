@@ -21,7 +21,8 @@ export interface ShellInvitation {
   id: string
   orgSlug: string
   orgName: string
-  invitedBy: string
+  /** Who invited the user, when the identity provider exposes it. */
+  invitedBy?: string
   role: string
 }
 

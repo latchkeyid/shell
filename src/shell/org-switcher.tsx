@@ -589,7 +589,7 @@ export function SwitcherPanel({
                     {invitation.orgName}
                   </span>
                   <span className="truncate text-2xs text-muted-foreground">
-                    Invited by {invitation.invitedBy} as {roleLabel(invitation.role)}
+                    {invitation.invitedBy ? `Invited by ${invitation.invitedBy}` : "Invited"} as {roleLabel(invitation.role)}
                   </span>
                 </span>
                 <ArrowRightIcon className="size-4 text-muted-foreground" aria-hidden="true" />
