@@ -13,7 +13,7 @@ export interface IdProps extends Omit<React.ComponentProps<"button">, "value" | 
   copy?: boolean
 }
 
-/** Identifier in mono at 12.5px with slashed zero; click copies the full value. */
+/** Identifier in mono at 13.5px with slashed zero; click copies the full value. */
 export function Id({ value, truncate = false, copy = true, className, onClick, ...props }: IdProps) {
   const [copied, setCopied] = React.useState(false)
   const announce = useAnnounce()
@@ -36,7 +36,7 @@ export function Id({ value, truncate = false, copy = true, className, onClick, .
 
   if (!copy) {
     return (
-      <code data-slot="id" title={value} className={cn("font-mono text-[12.5px] tabular-nums", className)}>
+      <code data-slot="id" title={value} className={cn("font-mono text-[13.5px] tabular-nums", className)}>
         {display}
       </code>
     )
@@ -50,7 +50,7 @@ export function Id({ value, truncate = false, copy = true, className, onClick, .
       aria-label={`Copy ${value}`}
       onClick={handleCopy}
       className={cn(
-        "group/id inline-flex max-w-full items-center gap-1 rounded-sm font-mono text-[12.5px] tabular-nums outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50",
+        "group/id inline-flex max-w-full items-center gap-1 rounded-sm font-mono text-[13.5px] tabular-nums outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50",
         className,
       )}
       {...props}

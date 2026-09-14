@@ -1,12 +1,15 @@
 import { expect, test, type Page } from "@playwright/test"
 
-const apps = ["tripline", "latchkey", "runsheet"] as const
+const apps = ["tripline", "latchkey", "runsheet", "wardroom", "purser", "foghorn"] as const
 const themes = ["light", "dark"] as const
 
 const sessions: Record<(typeof apps)[number], string> = {
   tripline: "multi",
   latchkey: "staff",
   runsheet: "single",
+  wardroom: "multi",
+  purser: "single",
+  foghorn: "multi",
 }
 
 async function open(page: Page, query: Record<string, string>) {

@@ -1,7 +1,7 @@
 {
   "name": "@latchkey/shell",
   "version": "0.1.0",
-  "description": "One theme and one app shell for the latchkey consoles: tripline, runsheet and the latchkey console.",
+  "description": "One theme and one app shell for the latchkey consoles: tripline, runsheet, the latchkey console, wardroom, purser and foghorn.",
   "type": "module",
   "private": false,
   "license": "UNLICENSED",

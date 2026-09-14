@@ -5,8 +5,8 @@
  * only public API; it is generated from the 12-step scale below. Status
  * scales (--success, --warning, --info, --destructive) have fixed hues and
  * are never used as an accent. The accent itself lives in one file per app
- * (tripline.css, runsheet.css, latchkey.css) and is the only thing that
- * differs between them.
+ * (tripline.css, runsheet.css, latchkey.css, wardroom.css, purser.css,
+ * foghorn.css) and is the only thing that differs between them.
  *
  * Theme states: bare :root is light, .dark on <html> is dark. ThemeProvider
  * toggles the class and color-scheme.
@@ -94,14 +94,16 @@
   --font-mono--font-feature-settings: "zero" 1, "liga" 0, "calt" 0;
   --font-heading: var(--font-sans);
 
-  /* 12 / 13 / 14 / 16, rem-based. text-sm (13px) is the app body size. */
-  --text-2xs: 0.6875rem;
+  /* 12 / 13 / 14 / 15 / 16, rem-based. text-sm (14px) is the app body size.
+     Bumped one step from 11/12/13/14 on 2026-09-14 with every line-height
+     kept, so nothing moves: rows, cells and nav items keep their heights. */
+  --text-2xs: 0.75rem;
   --text-2xs--line-height: 1rem;
-  --text-xs: 0.75rem;
+  --text-xs: 0.8125rem;
   --text-xs--line-height: 1rem;
-  --text-sm: 0.8125rem;
+  --text-sm: 0.875rem;
   --text-sm--line-height: 1.25rem;
-  --text-md: 0.875rem;
+  --text-md: 0.9375rem;
   --text-md--line-height: 1.25rem;
   --text-base: 1rem;
   --text-base--line-height: 1.5rem;
@@ -508,7 +510,7 @@
   }
 }
 
-/* DataTable density: 28 / 36 / 44px rows at 13px type. */
+/* DataTable density: 28 / 36 / 44px rows at 14px type (20px line-height). */
 [data-density="compact"] {
   --cell-py: 4px;
   --cell-px: 8px;

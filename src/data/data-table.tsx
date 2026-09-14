@@ -410,7 +410,7 @@ function BodyCell<TData extends RowData>({ cell, pinned }: { cell: Cell<DataTabl
       className={cn(
         "border-b border-b-border-soft bg-card px-(--cell-px) py-(--cell-py) align-middle whitespace-nowrap group-hover/row:bg-[color-mix(in_srgb,var(--row-hover),var(--card))] group-data-[state=selected]/row:bg-transparent",
         meta?.numeric && "text-right tabular-nums",
-        meta?.mono && "font-mono text-[12.5px]",
+        meta?.mono && "font-mono text-[13.5px]",
         isPinned === "start" && "border-r border-r-border-soft",
         isPinned === "end" && "border-l border-l-border-soft",
         meta?.className,

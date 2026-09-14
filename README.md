@@ -1,9 +1,10 @@
 # @latchkey/shell
 
-One theme and one app shell for the three consoles that sign in through
-latchkey: **tripline** (errors and performance), **runsheet** (runbooks and
-ops) and the **latchkey console** (identity admin). Each app differs only in
-its accent colour and the nav groups it passes in.
+One theme and one app shell for the consoles that sign in through latchkey:
+**tripline** (errors and performance), **runsheet** (runbooks and ops), the
+**latchkey console** (identity admin), **wardroom** (the team hub), **purser**
+(support and the customer record) and **foghorn** (outbound marketing). Each
+app differs only in its accent colour and the nav groups it passes in.
 
 React 19 · TypeScript · Tailwind v4 · shadcn/ui (radix) · lucide · cmdk ·
 sonner · TanStack Table v9. Shipped as TypeScript source; the consumer's Vite
@@ -38,7 +39,7 @@ accent file, and tell Tailwind to scan the shell's source for classes:
 ```css
 @import "tailwindcss";
 @import "@latchkey/shell/theme/base.css";
-@import "@latchkey/shell/theme/tripline.css"; /* or runsheet.css / latchkey.css */
+@import "@latchkey/shell/theme/tripline.css"; /* or runsheet / latchkey / wardroom / purser / foghorn .css */
 @source "../node_modules/@latchkey/shell/src";
 ```
 
@@ -325,8 +326,8 @@ the top of the sidebar, gradient avatar and primary button, glassy action bar,
 two-layer card shadows, the active nav ring/glow, selected-row gradient and
 status-dot halos. Components reference semantic tokens only.
 
-Tailwind extras: `text-2xs` (11px), `text-sm` is 13px (the app body size),
-`text-md` (14px, inputs), `text-metric`, `bg-accent-gradient`,
+Tailwind extras: `text-2xs` (12px), `text-xs` (13px), `text-sm` is 14px (the
+app body size), `text-md` (15px, inputs), `text-metric`, `bg-accent-gradient`,
 `shadow-float` / `shadow-lift`, and colour utilities for every token
 (`bg-success-muted`, `text-staff-foreground`, `bg-row-hover`, …).
 

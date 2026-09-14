@@ -46,21 +46,29 @@ from a 12-step scale layer. Plus status scales the contract lacks:
   `#1F7A4D` / `#5CC28C`; info blue. Staff/impersonation chrome is amber
   `#D97706` and is reserved for that.
 - **Accent, the only per-app variable** (`theme/tripline.css`,
-  `theme/runsheet.css`, `theme/latchkey.css`), each with a second stop
+  `theme/runsheet.css`, `theme/latchkey.css`, `theme/wardroom.css`,
+  `theme/purser.css`, `theme/foghorn.css`), each with a second stop
   for gradients (`--accent-2`) and a soft tint (`--accent-soft`):
   tripline indigo `#5B5BD6` (dark `#7C7CE8`), accent-2 `#8E4EC6` /
   `#B07CE8`, soft `#EEEEFB` / `#26244A`; runsheet teal `#12A594` /
   `#3FC29B`, accent-2 `#2FB36B` / `#5FD08A`, soft `#E0F5F0` / `#163A31`;
   latchkey violet `#6E56CF` / `#9B8AE6`, accent-2 `#B14AB8` / `#D37BE0`,
-  soft `#F1EEFB` / `#2B2450`. Map the accent onto `--primary`,
-  `--ring`, `--sidebar-primary`, `--sidebar-accent`.
+  soft `#F1EEFB` / `#2B2450`; wardroom cerulean `#0A7CA6` / `#50B1DC`,
+  accent-2 `#0E9CA2` / `#4AC9D0`, soft `#E3F3FB` / `#0A303F`; purser
+  moss `#688003` / `#9FBC4E`, accent-2 `#80B934` / `#A1D862`, soft
+  `#EEF6DC` / `#293210`; foghorn fuchsia `#BF308F` / `#E977BB`, accent-2
+  `#E1505A` / `#FF8386`, soft `#FDEAF4` / `#461E36`. The six accents sit
+  on the hue wheel away from each other and from the status hues (red,
+  amber, green, blue are never an accent). Map the accent onto
+  `--primary`, `--ring`, `--sidebar-primary`, `--sidebar-accent`.
 - **Type**: Geist Sans + Geist Mono (the `geist` npm package,
-  self-hosted); scale 12/13/14/16 rem-based with 13px app body and table
-  rows, 12px labels/metadata/badges, 14px inputs (16px on touch), 16px
-  page titles, a `Metric` style (24–32px, tabular-nums, medium);
-  `tabular-nums` on every numeric column; mono (12.5px, slashed zero,
-  ligatures off) for identifiers via an `<Id>` component. Line-height
-  1.25 single-line, 1.5 multi-line.
+  self-hosted); scale 12/13/14/15/16 rem-based with 14px app body and
+  table rows, 13px labels/metadata/badges, 12px group labels and counts,
+  15px inputs (16px on touch), 16px page titles, a `Metric` style
+  (24–32px, tabular-nums, medium); `tabular-nums` on every numeric
+  column; mono (13.5px, slashed zero, ligatures off) for identifiers via
+  an `<Id>` component. Line-height 20px for body (so row densities are
+  unchanged by the 2026-09-14 one-step bump from 13px), 1.5 multi-line.
 - **Radius**: `--radius: 0.375rem`; 6px controls/badges/inputs, 8px
   cards/popovers, 12px menus/dialogs; nav items and table rows ≤ 6px.
   Controls h-8 (32px). Focus ring 3px `--ring`.
@@ -99,9 +107,9 @@ Sidebar contents, top to bottom:
    `SidebarMenuAction`), seeded by the app, persisted per user+app in
    localStorage (`shell.pins.<app>.<userId>`), plus up to 5 Recent.
 3. 3–6 task-oriented groups with non-interactive `SidebarGroupLabel`
-   headers (11px uppercase tracking-wide muted, 16px gap between groups)
-   and 28px `SidebarMenuButton size="sm"` rows (13px, lucide 16px icon,
-   optional trailing count in mono 11px). **Two levels only**, no
+   headers (12px uppercase tracking-wide muted, 16px gap between groups)
+   and 28px `SidebarMenuButton size="sm"` rows (14px, lucide 16px icon,
+   optional trailing count in mono 12px). **Two levels only**, no
    accordions; entity sub-pages are Tabs in the action bar.
 4. `SidebarFooter`: a muted "⌘B" hint; NO account menu here.
 
@@ -117,7 +125,7 @@ Sign out).
 
 Trigger (expanded): `SidebarMenuButton size="lg"` (h-12): 32px avatar
 (logo else two-letter initials on a gradient), two truncated lines (org
-name 13px medium; role for THIS org 12px muted: Owner/Admin/Member/
+name 14px medium; role for THIS org 13px muted: Owner/Admin/Member/
 Viewer), `ChevronsUpDown` 16px only when there is something to switch to
 (other orgs, invitations, create, or staff). Pending-invitation count as
 a 16px badge on the avatar corner. Staff view-as: amber ring
@@ -143,7 +151,7 @@ ignored inside inputs/editors/open dialogs). Sections top to bottom:
 4. Recent — only when memberships > 8: last 3 visited.
 5. Your organisations (heading shows the count): current org pinned
    first with Check + `aria-selected`, rest alphabetical; 36px rows,
-   20px avatar, name, role right-aligned 12px muted; suspended orgs
+   20px avatar, name, role right-aligned 13px muted; suspended orgs
    `aria-disabled` with a status tip.
 6. Platform — staff only: "All organisations…" → the app's directory
    page; while the query is ≥ 2 chars, server results for non-member
@@ -225,7 +233,7 @@ items.
 
 - `DataTable` on TanStack Table under shadcn `Table`: `data-density=
   "compact|normal|spacious"` on the root sets `--cell-py 4/8/12px` and
-  `--cell-px 8/12/16px` (28/36/44px rows at 13px), chosen from a view
+  `--cell-px 8/12/16px` (28/36/44px rows at 14px), chosen from a view
   options menu and persisted per route in localStorage; sticky header
   inside the table's own overflow container; optional pinned first
   column (identifier) and last column (row actions); numeric columns
@@ -233,7 +241,7 @@ items.
   within 7 days then absolute via shared `formatters`. Cursor paging
   copy: "21–40 of 142", Previous / Next, page-size selector. Live
   streams append behind an "N new" pill.
-- `ListRow`: whole-row clickable, primary text + inline 12px muted
+- `ListRow`: whole-row clickable, primary text + inline 13px muted
   metadata + status glyph + trailing hover actions (tripline issue
   stream, runsheet run history).
 - `StatusDot` (6px dot + text, never colour-only), `Level` (16px icon +

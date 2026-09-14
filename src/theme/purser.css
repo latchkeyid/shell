@@ -1,0 +1,23 @@
+/* purser accent: moss. Import after base.css. */
+
+:root {
+  --primary: oklch(0.56 0.135 122); /* #688003 */
+  --primary-foreground: oklch(0.99 0.005 122);
+  --accent-2: oklch(0.72 0.17 130); /* #80B934 */
+  --accent-soft: oklch(0.96 0.035 122); /* #EEF6DC */
+  --ring: var(--primary);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent-soft);
+  --sidebar-accent-foreground: var(--primary);
+  --sidebar-ring: var(--primary);
+  --row-selected: color-mix(in oklab, var(--primary) 8%, transparent);
+}
+
+.dark {
+  --primary: oklch(0.75 0.14 122); /* #9FBC4E */
+  --primary-foreground: oklch(0.15 0.03 122);
+  --accent-2: oklch(0.82 0.16 130); /* #A1D862 */
+  --accent-soft: oklch(0.3 0.055 122); /* #293210 */
+  --row-selected: color-mix(in oklab, var(--primary) 12%, transparent);
+}

@@ -4,6 +4,9 @@ import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react"
 import triplineCss from "../src/theme/tripline.css?url"
 import runsheetCss from "../src/theme/runsheet.css?url"
 import latchkeyCss from "../src/theme/latchkey.css?url"
+import wardroomCss from "../src/theme/wardroom.css?url"
+import purserCss from "../src/theme/purser.css?url"
+import foghornCss from "../src/theme/foghorn.css?url"
 
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -17,24 +20,35 @@ import { TriplineScreen } from "./screens/tripline"
 import { LatchkeyScreen } from "./screens/latchkey"
 import { RunsheetScreen } from "./screens/runsheet"
 
-export type AppKey = "tripline" | "runsheet" | "latchkey"
+export type AppKey = "tripline" | "runsheet" | "latchkey" | "wardroom" | "purser" | "foghorn"
 
 const accents: Record<AppKey, string> = {
   tripline: triplineCss,
   runsheet: runsheetCss,
   latchkey: latchkeyCss,
+  wardroom: wardroomCss,
+  purser: purserCss,
+  foghorn: foghornCss,
 }
 
 const appLabels: Record<AppKey, string> = {
   tripline: "tripline",
   runsheet: "runsheet",
   latchkey: "latchkey",
+  wardroom: "wardroom",
+  purser: "purser",
+  foghorn: "foghorn",
 }
 
 const defaultPaths: Record<AppKey, string> = {
   tripline: "/o/grapevine/p/mobile/issues?env=production",
   runsheet: "/o/runsheet/t/platform-sre/runbooks",
   latchkey: "/o/northcote-cafe/tenants/all/identities",
+  // The three new consoles have no screens of their own yet; they borrow
+  // one so the accent can be seen on a full layout.
+  wardroom: "/o/grapevine/p/mobile/issues?env=production",
+  purser: "/o/runsheet/t/platform-sre/runbooks",
+  foghorn: "/o/grapevine/p/mobile/issues?env=production",
 }
 
 /** Playground state is driven by the query string so Playwright can address any screen. */
@@ -197,8 +211,8 @@ function PlaygroundBody({
   }
 
   const screenProps = { session, path, navigate, callbacks, LinkComponent: PlaygroundLink }
-  if (app === "tripline") return <TriplineScreen {...screenProps} />
-  if (app === "runsheet") return <RunsheetScreen {...screenProps} />
+  if (app === "tripline" || app === "wardroom" || app === "foghorn") return <TriplineScreen {...screenProps} />
+  if (app === "runsheet" || app === "purser") return <RunsheetScreen {...screenProps} />
   return <LatchkeyScreen {...screenProps} />
 }
 
