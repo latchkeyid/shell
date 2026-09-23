@@ -137,6 +137,52 @@ export { initials, roleLabel, isMac, modKeyLabel } from "./lib/text"
 export { readJson, writeJson, removeKey, readCookie } from "./lib/storage"
 export { useIsMobile } from "./hooks/use-mobile"
 
+// Auth — the OIDC token client apps adopt instead of handling tokens by hand.
+// See "Adopting the auth client" in the README.
+export {
+  AuthClient,
+  AuthError,
+  accessTokenExpiry,
+  clearTokens,
+  createTokenEndpointCall,
+  holdsSession,
+  oauthError,
+  parseCrossTabMessage,
+  readTokens,
+  tokensFromResponse,
+  writeTokens,
+  CROSS_TAB_MESSAGE_TAG,
+  DEFAULT_ACCESS_TOKEN_TTL_MS,
+  DEFAULT_BASE_BACKOFF_MS,
+  DEFAULT_MAX_ATTEMPTS,
+  DEFAULT_MAX_BACKOFF_MS,
+  DEFAULT_MIN_DELAY_MS,
+  DEFAULT_REFRESH_AT,
+  DEFAULT_STALE_WINDOW_MS,
+  DEFAULT_STORAGE_KEY,
+  type AuthClientOptions,
+  type AuthErrorCode,
+  type CrossTabAuthMessage,
+  type FetchTokenEndpointOptions,
+  type ListenerTarget,
+  type TokenEndpointCall,
+  type TokenEndpointResponse,
+  type Tokens,
+  type TokensListener,
+} from "./auth/client"
+export {
+  createBroadcastChannel,
+  createCrossTabChannel,
+  createNullChannel,
+  createStorageChannel,
+  type CrossTabChannel,
+  type CrossTabChannelOptions,
+  type CrossTabHandler,
+  type StorageEventLike,
+  type StorageEventTarget,
+} from "./auth/cross-tab"
+export { withAuthRetry, type AuthRetryOptions, type AuthTokenSource, type FetchLike } from "./auth/with-auth-retry"
+
 // shadcn/ui primitives
 export * from "./components/ui/avatar"
 export * from "./components/ui/badge"
