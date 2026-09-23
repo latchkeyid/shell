@@ -9,10 +9,13 @@
  *  callers share one network call, and retry with backoff that gives up on the
  *  attempt but not on the session.
  *
- *  Cross-tab coordination and the 401 hook land on top of this; nothing here is
- *  exported from the package yet. */
+ *  Tabs coordinate over a {@link CrossTabChannel}: the tab that rotates tells
+ *  the others, and a tab that is told adopts what it was told instead of
+ *  rotating again — which is what makes N open tabs rotate once. The 401
+ *  fallback is `withAuthRetry`, next door. */
 
 import { readJson, removeKey, writeJson } from "../lib/storage"
+import { createCrossTabChannel, createNullChannel, type CrossTabChannel } from "./cross-tab"
 
 /** localStorage key holding the token set. */
 export const DEFAULT_STORAGE_KEY = "latchkey.tokens"
@@ -27,6 +30,9 @@ export const DEFAULT_BASE_BACKOFF_MS = 1_000
 export const DEFAULT_MAX_BACKOFF_MS = 30_000
 /** Assumed access token life when the response carries neither `exp` nor `expires_in`. */
 export const DEFAULT_ACCESS_TOKEN_TTL_MS = 300_000
+/** Tag on every cross-tab message: a channel name or a storage key is shared
+ *  with whatever else runs on the origin, so nothing untagged is ours. */
+export const CROSS_TAB_MESSAGE_TAG = "latchkey.auth/1"
 
 export interface Tokens {
   access_token: string
@@ -126,6 +132,24 @@ export function clearTokens(storageKey: string = DEFAULT_STORAGE_KEY): void {
   removeKey(storageKey)
 }
 
+/** What one tab tells the others: it rotated, or the session is over. */
+export type CrossTabAuthMessage =
+  | { tag: typeof CROSS_TAB_MESSAGE_TAG; type: "rotated"; tokens: Tokens }
+  | { tag: typeof CROSS_TAB_MESSAGE_TAG; type: "ended" }
+
+/** Validate an inbound payload. It crossed a process boundary, so it is parsed
+ *  rather than cast: a malformed or foreign message is dropped, not adopted. */
+export function parseCrossTabMessage(payload: unknown): CrossTabAuthMessage | null {
+  if (typeof payload !== "object" || payload === null) return null
+  const message = payload as Record<string, unknown>
+  if (message.tag !== CROSS_TAB_MESSAGE_TAG) return null
+  if (message.type === "ended") return { tag: CROSS_TAB_MESSAGE_TAG, type: "ended" }
+  if (message.type === "rotated" && isTokens(message.tokens)) {
+    return { tag: CROSS_TAB_MESSAGE_TAG, type: "rotated", tokens: message.tokens }
+  }
+  return null
+}
+
 /** The OAuth `error` code in a token endpoint body, per RFC 6749 §5.2. */
 export function oauthError(body: unknown): string | undefined {
   if (typeof body !== "object" || body === null) return undefined
@@ -174,6 +198,11 @@ export interface AuthClientOptions {
   jitter?: () => number
   win?: ListenerTarget | null
   doc?: (ListenerTarget & { visibilityState?: string }) | null
+  /** How this tab reaches the others. Defaults to `BroadcastChannel` falling
+   *  back to the `storage` event; pass null to run this client on its own. */
+  channel?: CrossTabChannel | null
+  /** Name of the default channel. Defaults to `${storageKey}.sync`. */
+  channelName?: string
 }
 
 export type TokensListener = (tokens: Tokens | null) => void
@@ -191,8 +220,10 @@ export class AuthClient {
   private readonly jitter: () => number
   private readonly win: ListenerTarget | null
   private readonly doc: (ListenerTarget & { visibilityState?: string }) | null
+  private readonly channel: CrossTabChannel
 
   private readonly listeners = new Set<TokensListener>()
+  private unlisten: (() => void) | null = null
   private tokens: Tokens | null = null
   private inFlight: Promise<Tokens> | null = null
   private timer: ReturnType<typeof setTimeout> | null = null
@@ -221,6 +252,10 @@ export class AuthClient {
     this.jitter = options.jitter ?? (() => Math.random())
     this.win = options.win === undefined ? (globalThis.window ?? null) : options.win
     this.doc = options.doc === undefined ? (globalThis.document ?? null) : options.doc
+    this.channel =
+      options.channel === undefined
+        ? createCrossTabChannel(options.channelName ?? `${this.storageKey}.sync`)
+        : (options.channel ?? createNullChannel())
 
     if (options.tokens === undefined) {
       this.tokens = readTokens(this.storageKey)
@@ -255,6 +290,7 @@ export class AuthClient {
     if (this.started) return
     this.started = true
     this.tokens = readTokens(this.storageKey) ?? this.tokens
+    this.unlisten = this.channel.listen(this.onMessage)
     this.win?.addEventListener("focus", this.onWake)
     this.doc?.addEventListener("visibilitychange", this.onWake)
     this.arm()
@@ -265,13 +301,47 @@ export class AuthClient {
     if (!this.started) return
     this.started = false
     this.clearTimer()
+    this.unlisten?.()
+    this.unlisten = null
     this.win?.removeEventListener("focus", this.onWake)
     this.doc?.removeEventListener("visibilitychange", this.onWake)
   }
 
-  /** Take on a token set minted or rotated elsewhere — a sign-in callback, or
-   *  another tab — persisting it and re-arming the schedule from it. */
+  /** Take on a token set this tab minted or rotated — a sign-in callback, or a
+   *  rotation — persisting it, re-arming the schedule from it, and telling the
+   *  other tabs so none of them rotates it again. */
   adopt(tokens: Tokens): Tokens {
+    this.apply(tokens)
+    this.channel.post({ tag: CROSS_TAB_MESSAGE_TAG, type: "rotated", tokens })
+    return tokens
+  }
+
+  /** Drop the session here and in every other tab: clear the store, cancel the
+   *  schedule, tell subscribers. Only ever reached by `invalid_grant` or a
+   *  deliberate sign-out — never by a network error or a 5xx. */
+  endSession(): void {
+    this.clearSession()
+    this.channel.post({ tag: CROSS_TAB_MESSAGE_TAG, type: "ended" })
+  }
+
+  /** A sibling tab rotated, or ended the session. Neither is a reason to call
+   *  the token endpoint: the work has already been done and this tab's part is
+   *  to take the result, re-arming its own schedule from the new token so its
+   *  timer moves out with everyone else's. */
+  private readonly onMessage = (payload: unknown): void => {
+    const message = parseCrossTabMessage(payload)
+    if (!message) return
+    if (message.type === "ended") {
+      if (this.tokens !== null) this.clearSession()
+      return
+    }
+    if (this.tokens?.refresh_token === message.tokens.refresh_token) return
+    this.apply(message.tokens)
+  }
+
+  /** Hold a token set, without telling anyone: the half of `adopt` that a
+   *  message from another tab must not echo back to it. */
+  private apply(tokens: Tokens): Tokens {
     this.tokens = tokens
     writeTokens(tokens, this.storageKey)
     this.arm()
@@ -279,9 +349,7 @@ export class AuthClient {
     return tokens
   }
 
-  /** Drop the session: clear the store, cancel the schedule, tell subscribers.
-   *  Only ever called for `invalid_grant` or a deliberate sign-out. */
-  endSession(): void {
+  private clearSession(): void {
     this.clearTimer()
     this.tokens = null
     clearTokens(this.storageKey)
@@ -319,6 +387,14 @@ export class AuthClient {
     for (let attempt = 1; attempt <= this.maxAttempts; attempt += 1) {
       try {
         const response = await this.exchange(held.refresh_token)
+        const current = this.tokens
+        if (holdsSession(current) && current.refresh_token !== held.refresh_token) {
+          // Another tab rotated while this call was in the air. The token this
+          // call presented is a spent one, so whatever the issuer answered
+          // about it says nothing about the session — including `invalid_grant`,
+          // which here would end a session that is demonstrably alive.
+          return current
+        }
         if (oauthError(response.body) === "invalid_grant") {
           // The one answer that means the session is over. Everything else is
           // this request failing, not the person being signed out.
@@ -338,9 +414,13 @@ export class AuthClient {
       }
       if (attempt === this.maxAttempts) break
       await this.sleep(this.backoffMs(attempt))
-      if (!holdsSession(this.tokens)) {
+      const afterBackoff = this.tokens
+      if (!holdsSession(afterBackoff)) {
         throw new AuthError("stopped", "the session ended while the refresh was retrying")
       }
+      // A sibling tab got through while this one was backing off. Its token is
+      // the live one; retrying with the spent one would only fail.
+      if (afterBackoff.refresh_token !== held.refresh_token) return afterBackoff
     }
     // Out of attempts, but the refresh token was never refused: keep the
     // session so the next timer, focus or 401 can try again.
