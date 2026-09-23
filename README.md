@@ -159,6 +159,159 @@ amber ring on the switcher trigger, a 2px amber inset on the content frame, a
 28px amber banner above the action bar and a `[Staff] ` prefix on
 `document.title`. The elevation flow itself belongs to the app.
 
+## Adopting the auth client
+
+`@latchkey/shell` ships the OIDC token client every console should use
+instead of handling tokens by hand. It exists because the hand-written ones
+all fail the same way: they treat the **access** token's one-hour `exp` as the
+boundary of being signed in, and log a person out while a perfectly good
+refresh token sits in `localStorage` beside it. See ADR 001 "Stay signed in"
+in the `latchkey` repo for the decision behind this section.
+
+### Initialize it
+
+The client owns the **refresh** leg: rotating the refresh token, on a
+schedule, once per browser no matter how many tabs are open. Point it at the
+issuer's token endpoint and give it the app's `client_id`:
+
+```ts
+import { AuthClient, createTokenEndpointCall } from "@latchkey/shell"
+
+const ISSUER = "https://auth.latchkey.id"
+
+export const auth = new AuthClient({
+  exchange: createTokenEndpointCall({
+    tokenEndpoint: `${ISSUER}/oauth/token`,
+    clientId: "runsheet-console",
+  }),
+})
+
+auth.start()   // adopt what is in storage, arm the schedule, listen for siblings
+```
+
+`start()` is idempotent; call it once, as the app boots. Options worth knowing:
+`storageKey` (default `latchkey.tokens`) when two apps share an origin,
+`refreshAt` (default `0.8` of the access token's life), `channel` / `channelName`
+for cross-tab coordination, and `maxAttempts` / `baseBackoffMs` / `maxBackoffMs`
+for the retry. Pass `win: null, doc: null, channel: null` to run it inert, as
+the tests do.
+
+The **sign-in** leg stays in the app, because the redirect is the app's: it
+owns `redirect_uri`, PKCE, `state`, and the callback route that exchanges the
+code. When the callback has its tokens, hand them over once —
+
+```ts
+auth.adopt({ access_token, refresh_token, expires_at })
+```
+
+— and the client takes it from there: it persists them, arms the refresh, and
+tells the other tabs.
+
+### "Signed in" is the client's state, never an `exp` check
+
+```ts
+auth.isSignedIn()          // holding a live session
+auth.snapshot()            // the token set, or null
+auth.subscribe((tokens) => setSignedIn(tokens !== null))
+```
+
+Do **not** decode the access token and compare `exp` to the clock. An access
+token is a one-hour artefact of a session that lasts thirty days; its expiry
+is an event the client handles, not a fact the app reads. `isSignedIn()` stays
+true while an access token is expired and being rotated, and goes false only
+when the issuer actually refuses the refresh token (`invalid_grant`) or the
+app signs out. A network error, a captive portal and a 5xx are **not**
+sign-outs: the client retries those with backoff and keeps the session.
+
+To send a request by hand, ask for a token rather than reading one — it
+rotates first if the held one is stale, and concurrent callers share the one
+rotation:
+
+```ts
+const token = await auth.getAccessToken()   // string, or null when signed out
+```
+
+### Wire the 401 hook into the API layer
+
+With the scheduled refresh doing its job a 401 should be rare. Rare is not
+never, so wrap the app's fetch once, at the bottom of its API layer:
+
+```ts
+import { withAuthRetry } from "@latchkey/shell"
+
+export const apiFetch = withAuthRetry(fetch, auth)
+
+const response = await apiFetch("/api/runbooks")
+```
+
+`withAuthRetry` sets `Authorization: Bearer …` from the client on every
+request, and on a 401 refreshes **once** and retries **once** — never in a
+loop. A second 401 is returned as the answer. If the refresh cannot rotate,
+the original 401 comes back untouched and whether the session ended is
+reported through `subscribe`, not through the response. The refresh is the
+client's single-flight one, so twenty requests failing together cost one call
+to the token endpoint.
+
+Options: `statuses` (default `[401]`; 403 is deliberately excluded — rotating
+a token does not change a permissions answer), `header` and `scheme`, and
+`authorize: false` when the app attaches credentials itself. The request is
+replayed from the `input` and `init` it was given, so a body that can only be
+read once — a `ReadableStream`, a consumed `Request` — cannot be retried;
+strings, `FormData`, `URLSearchParams` and buffers all can.
+
+### Concurrent tabs coordinate on their own
+
+Nothing to configure. Each client broadcasts its rotations over a
+`BroadcastChannel`, falling back to a `localStorage` key other tabs get a
+`storage` event for where `BroadcastChannel` is unavailable. A tab that hears
+a rotation **adopts** the token and re-arms its own schedule from it; it does
+not call the token endpoint. So five open tabs rotate once and all five end up
+holding the same token, instead of five rotations racing each other into the
+issuer's reuse grace window. A sign-out or an `invalid_grant` in one tab
+clears the session in all of them.
+
+A message carries only what a same-origin tab already has in its own
+`localStorage`, and is tagged and re-validated on arrival, so an unrelated
+channel name or a malformed payload is dropped rather than adopted. Pass
+`channel: null` to opt a client out entirely.
+
+### `prompt=none`: the last silent recovery, as a top-level redirect
+
+When the client reports the session ended — cleared storage, a new browser
+profile, a revoked token — the person may **still** hold a live session on the
+issuer itself. Before showing a sign-in screen, an app may spend one
+navigation finding out:
+
+```ts
+auth.subscribe((tokens) => {
+  if (tokens !== null) return
+  const url = new URL(`${ISSUER}/oauth/authorize`)
+  url.searchParams.set("prompt", "none")
+  url.searchParams.set("client_id", "runsheet-console")
+  url.searchParams.set("redirect_uri", `${origin}/auth/callback`)
+  url.searchParams.set("response_type", "code")
+  url.searchParams.set("state", encodeWhereTheyWere(location))
+  window.location.assign(url)          // top-level. See below.
+})
+```
+
+A live issuer session comes back as an ordinary authorization code, with
+nothing rendered and no one interrupted; anything else comes back as
+`?error=login_required`, which is the app's signal that a real, visible
+sign-in is warranted. Carry where the person was in `state` (or in the
+`redirect_uri`'s own path) so the round trip returns them there, and guard the
+attempt so a `login_required` cannot bounce into another one.
+
+**This must be a top-level redirect. Never a hidden iframe.** The classic
+silent-re-auth shape — an iframe pointing at `/oauth/authorize` — does not
+work here. The issuer's session cookie belongs to `auth.latchkey.id`; inside
+an iframe on the app's origin it is a third-party cookie, blocked by Safari's
+ITP and being phased out in Chrome. The iframe would be sent without it, the
+issuer would correctly answer `login_required`, and the app would conclude the
+person is signed out **while they are not** — the exact failure this client
+exists to end, dressed as a feature. The navigation is the price of being
+right in every current browser.
+
 ## URL scheme
 
 Every console follows `/o/:orgSlug/…`; `/o/~/…` resolves last-visited →
@@ -336,7 +489,7 @@ app body size), `text-md` (15px, inputs), `text-metric`, `bg-accent-gradient`,
 ```sh
 npm install
 npm run dev          # playground on http://localhost:5178
-npm test             # vitest: hotkeys, switcher sections, formatters, density
+npm test             # vitest: auth client, hotkeys, switcher sections, formatters, density
 npm run typecheck    # tsc --noEmit (also `npm run build`; the package ships source)
 npm run test:e2e     # playwright smoke; writes docs/screenshots/*.png
 npm run fonts        # re-vendor Geist from the geist package
